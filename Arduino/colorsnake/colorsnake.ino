@@ -851,7 +851,8 @@ void setup() {
   tft.fillScreen(ST77XX_BLACK);
 
   pinMode(26, OUTPUT);
-  analogWrite(26, 100);
+  analogWrite(26, 0);
+  
   Serial.begin(9600);
   pinMode(KEY_RIGHT, INPUT_PULLUP);
   pinMode(KEY_DOWN, INPUT_PULLUP);
@@ -885,7 +886,10 @@ void setup() {
 
   int16_t  x1, y1;
   uint16_t w, h;
-
+  for (int i = 0; i < 100; i++) {
+    analogWrite(26, i);
+    delay(10);
+  }
   run();
 }
 

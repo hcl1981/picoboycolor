@@ -35,7 +35,7 @@ GFXcanvas16 canvas4(100, 211);
 byte currentcolor;
 byte nextcolor;
 byte fix[10][20];//   grün   rot       blau
-uint16_t color1[] = {0x054E, 0xF800, 0x001f}; //rand // 
+uint16_t color1[] = {0x054E, 0xF800, 0x001f}; //rand //
 uint16_t color2[] = {0x07e0, 0xFDD6, 0x249F}; //füllung, heller
 int type, rotation;
 int x, y;
@@ -159,10 +159,10 @@ void drawBlock(int x, int y, bool filled, byte color)
   y += 2;
   int basex = x * 10 - 1;
   int basey = 30 + (y - 4) * 10;
-  canvas.drawRect(basex + 1, basey + 1, 10, 10, color1[color-1]);
-  canvas.drawRect(basex + 2, basey + 2, 8, 8, color1[color-1]);
+  canvas.drawRect(basex + 1, basey + 1, 10, 10, color1[color - 1]);
+  canvas.drawRect(basex + 2, basey + 2, 8, 8, color1[color - 1]);
   if (filled) {
-    canvas.fillRect(basex + 3, basey + 3, 6, 6, color2[color-1]);
+    canvas.fillRect(basex + 3, basey + 3, 6, 6, color2[color - 1]);
   }
 }
 
@@ -377,7 +377,7 @@ void drawAll()
   drawFix();
   drawTetromino();
   drawNext();
-  canvas.drawLine(0,25,100,25,ST77XX_BLACK);
+  canvas.drawLine(0, 25, 100, 25, ST77XX_BLACK);
   tft.drawRGBBitmap(71, 52, canvas.getBuffer(), canvas.width(), canvas.height());
 }
 
@@ -536,15 +536,15 @@ void playT(void)
   }
 }
 
-void dimCanvas(){
-  for(int i = 0; i < canvas.width()+1; i++){
-    for(int j = 0; j <  canvas.height()+1; j++){
-      if((i+j)%2 == 0){
-      canvas.drawPixel(i,j,0x8430 );
-      }
+void dimCanvas() {
+  for (int i = 0; i < canvas.width() + 1; i++) {
+    for (int j = 0; j <  canvas.height() + 1; j++) {
+      if ((i + j) % 2 == 0) {
+        canvas.drawPixel(i, j, 0x8430 );
       }
     }
   }
+}
 
 void run() {
 
@@ -563,7 +563,7 @@ void run() {
     delay(25);
   }
   randomSeed(millis());
-    tft.drawRGBBitmap(0, 0, finger, 240, 280);
+  tft.drawRGBBitmap(0, 0, finger, 240, 70);
   writeScore(0);
   while (true)
   {
@@ -580,7 +580,7 @@ void setup() {
   //tft.setSPISpeed(65000000);
 
   pinMode(26, OUTPUT);
-  analogWrite(26, 100);
+  analogWrite(26, 0);
 
   pinMode(KEY_RIGHT, INPUT_PULLUP);
   pinMode(KEY_DOWN, INPUT_PULLUP);
@@ -602,11 +602,14 @@ void setup() {
 
   canvas4.drawRGBBitmap(0, 0, back, 100, 211);
   tft.drawRGBBitmap(0, 0, finger, 240, 280);
-  tft.setCursor(30,40); // set cursor to center
+  tft.setCursor(30, 40); // set cursor to center
   tft.print("Press to play");
-
+  for (int i = 0; i < 100; i++) {
+    analogWrite(26, i);
+    delay(10);
+  }
   tft.setFont(&FreeSansBold18pt7b);
-  
+
   canvas2.drawRGBBitmap(0, 0, top, 240, 38);
   currentcolor = 1 + rand() % 3;
   nextcolor = 1 + rand() % 3;
