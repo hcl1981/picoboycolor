@@ -378,7 +378,7 @@ void drawAll()
   drawTetromino();
   drawNext();
   canvas.drawLine(0, 25, 100, 25, ST77XX_BLACK);
-  tft.drawRGBBitmap(71, 52, canvas.getBuffer(), canvas.width(), canvas.height());
+  tft.drawRGBBitmap(70, 52, canvas.getBuffer(), canvas.width(), canvas.height());
 }
 
 void playT(void)
@@ -503,7 +503,7 @@ void playT(void)
           */
           dimCanvas();
 
-          tft.drawRGBBitmap(71, 52, canvas.getBuffer(), canvas.width(), canvas.height());
+          tft.drawRGBBitmap(70, 52, canvas.getBuffer(), canvas.width(), canvas.height());
 
           delay(1000);
           while (digitalRead(KEY_CENTER) == HIGH)
@@ -602,8 +602,8 @@ void setup() {
 
   canvas4.drawRGBBitmap(0, 0, back, 100, 211);
   tft.drawRGBBitmap(0, 0, finger, 240, 280);
-  tft.setCursor(30, 40); // set cursor to center
-  tft.print("Press to play");
+  tft.setCursor(31, 40); // set cursor to center
+  tft.print("Push to play");
   for (int i = 0; i < 100; i++) {
     analogWrite(26, i);
     delay(10);

@@ -769,22 +769,7 @@ void run2(void) {
           //digitalWrite(LEDG,LOW);
           //digitalWrite(LEDY,LOW);
         } else {
-          /*
-            if(millis() > (edibleTime + edibleDuration)-500){
-
-            if(digitalRead(LEDR)==LOW){
-              digitalWrite(LEDR,HIGH);
-              //digitalWrite(LEDG,HIGH);
-              //digitalWrite(LEDY,HIGH);
-              } else {
-              digitalWrite(LEDR,LOW);
-              //digitalWrite(LEDG,LOW);
-              //digitalWrite(LEDY,LOW);
-            }
-            }
-          */
           if ((millis() > lastTone + 50) && millis() > (edibleTime + edibleDuration) - 50) {
-
             tone(SPEAKER, 5000, 10);
             lastTone = millis();
 
