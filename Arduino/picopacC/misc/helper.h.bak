@@ -1,25 +1,6 @@
 #include "hardware/pll.h"
 #include "hardware/clocks.h"
 
-#define TFT_CS        10
-#define TFT_RST        9
-#define TFT_DC         8
-
-#define LEDR          14
-#define LEDY          13
-#define LEDG          12
-#define KEY_RIGHT      2 //3x
-#define KEY_DOWN       3 //4
-#define KEY_LEFT       4 //1x
-#define KEY_UP         1 //2
-#define KEY_CENTER     0
-#define SPEAKER       15
-
-#define UP             1
-#define DOWN           2
-#define LEFT           3
-#define RIGHT          4
-
 void set_sys_clock_pll(uint32_t vco_freq, uint post_div1, uint post_div2) {
   if (!running_on_fpga()) {
     clock_configure(clk_sys,
