@@ -1,5 +1,5 @@
 #include <Adafruit_GFX.h>
-#include <Fonts/FreeSansBold18pt7b.h>
+#include "texgyreadventor_regular18pt7b.h"
 #include "image.h"
 #include "top.h"
 #include "blocks.h"
@@ -493,9 +493,9 @@ class Pictris {
 					void run() {
 					
 					tft.setTextColor(ST77XX_BLACK);
-					canvas.setFont(&FreeSansBold18pt7b);
+					canvas.setFont(&texgyreadventor_regular18pt7b);
 					canvas.setTextColor(ST77XX_BLACK);
-					canvas3.setFont(&FreeSansBold18pt7b);
+					canvas3.setFont(&texgyreadventor_regular18pt7b);
 					canvas3.setTextColor(ST77XX_BLACK);
 					
 					canvas4.drawRGBBitmap(0, 0, back, 100, 211);
@@ -505,11 +505,11 @@ class Pictris {
 					tft.setCursor(31, 53); 
 					tft.print("Highscore: ");
 					tft.print(eepromReadInt(0));
-					for (int i = 0; i < 100; i++) {
+					for (int i = 0; i < 256; i++) {
 					analogWrite(26, i);
-					delay(10);
+					delay(3);
 					}
-					tft.setFont(&FreeSansBold18pt7b);
+					tft.setFont(&texgyreadventor_regular18pt7b);
 					
 					canvas2.drawRGBBitmap(0, 0, top, 240, 38);
 					currentcolor = 1 + rand() % 3;

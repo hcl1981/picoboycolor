@@ -5,16 +5,6 @@
 #include "back.h"
 #include "top.h"
 
-#define LEDR          14
-#define LEDY          13
-#define LEDG          12
-#define KEY_RIGHT      3
-#define KEY_DOWN       4
-#define KEY_LEFT       1
-#define KEY_UP         2
-#define KEY_CENTER     0
-#define SPEAKER       15
-
 #define UP             1
 #define DOWN           2
 #define LEFT           3
@@ -132,16 +122,16 @@ class Sclange{
 	}
 	
 	void dtob(){
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 256; i++) {
 			analogWrite(26, i);
-			delay(10);
+			delay(3);
 		}
 	}
 	
 	void btod(){
-		for (int i = 0; i < 100; i++) {
-			analogWrite(26, 99-i);
-			delay(10);
+		for (int i = 0; i < 256; i++) {
+			analogWrite(26, 255-i);
+			delay(3);
 		}
 	}
 	
@@ -657,21 +647,21 @@ class Sclange{
 		
 		while (true)
 		{
-			while (millis() < lastTime + 55)//60
+			while (millis() < lastTime + 55-(len/4))//60
 			{
-				if (digitalRead(KEY_RIGHT) == LOW && lastDir != LEFT)
+				if (digitalRead(KEY_DOWN) == LOW && lastDir != LEFT)
 				{
 					direction = RIGHT;
 				}
-				if (digitalRead(KEY_LEFT) == LOW && lastDir != RIGHT)
+				if (digitalRead(KEY_UP) == LOW && lastDir != RIGHT)
 				{
 					direction = LEFT;
 				}
-				if (digitalRead(KEY_DOWN) == LOW && lastDir != UP)
+				if (digitalRead(KEY_LEFT) == LOW && lastDir != UP)
 				{
 					direction = DOWN;
 				}
-				if (digitalRead(KEY_UP) == LOW && lastDir != DOWN)
+				if (digitalRead(KEY_RIGHT) == LOW && lastDir != DOWN)
 				{
 					direction = UP;
 				}

@@ -6,17 +6,6 @@
 #include "sprites2.h"
 #include "images.h"
 
-
-#define LEDR          14
-#define LEDY          13
-#define LEDG          12
-#define KEY_RIGHT      2 //3x
-#define KEY_DOWN       3 //4
-#define KEY_LEFT       4 //1x
-#define KEY_UP         1 //2
-#define KEY_CENTER     0
-#define SPEAKER       15
-
 #define UP             1
 #define DOWN           2
 #define LEFT           3
@@ -30,7 +19,7 @@ class Tabman {
 	int life = 3;
 	int levelNum = 0;
 	int levelMax = 9;//9;
-	int stepTimeDefault = 16;
+	int stepTimeDefault = 14;
 	int stepTime = stepTimeDefault;
 	unsigned int level[12][21];
 	int score =  0;
@@ -112,7 +101,7 @@ class Tabman {
 	void writeHiscore(int score) {
 		char cstr[14];
 		sprintf(cstr, "HI-SCORE %d", score);
-		drawCentre(cstr, 115, 120);
+		drawCentre(cstr, 115, 105);
 	}
 	
 	void writeScore(int score, int lives) {
@@ -146,7 +135,7 @@ class Tabman {
 		for (int k = 0; k < 64; k++) {
 			for (int l = 0; l < 128; l++) {
 				if (image[k][l] > 0) {
-					canvas.drawPixel(113 - k , 51 + l, ST77XX_WHITE);
+					canvas.drawPixel(128 - k , 51 + l, ST77XX_WHITE);
 				}
 			}
 		}
@@ -629,9 +618,9 @@ class Tabman {
 		sendB();
 		
 		if (blOff) {
-			for (int i = 0; i < 100; i++) {
+			for (int i = 0; i < 256; i++) {
 				analogWrite(26, i);
-				delay(18);
+				delay(3);
 			}
 		}
 		blOff = false;
@@ -640,11 +629,11 @@ class Tabman {
 			canvas.setRotation(1);
 			if (millis() % 600 > 300) {
 				canvas.setTextColor(ST77XX_WHITE);
-				canvas.setCursor(108, 95);
+				canvas.setCursor(108, 80);
 				canvas.println("PUSH TO PLAY");
 				} else {
 				canvas.setTextColor(ST77XX_BLACK);
-				canvas.setCursor(108, 95);
+				canvas.setCursor(108, 80);
 				canvas.println("PUSH TO PLAY");
 			}
 			canvas.setRotation(4);
