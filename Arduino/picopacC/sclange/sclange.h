@@ -85,7 +85,6 @@ class Sclange{
 	Adafruit_ST7789 tft;
 	
 	GFXcanvas16 canvas;
-	//GFXcanvas16 canvasBack;
 	GFXcanvas16 canvas2;
 	GFXcanvas16 canvas3;
 	
