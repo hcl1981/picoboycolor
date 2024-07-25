@@ -6,8 +6,35 @@ class StarIntro {
     Adafruit_ST7789 tft;
 	GFXcanvas16 canvas;
 	int gameID = 1;
+	uint8_t red = 250, green = 0, blue = 0;
+	
 	public:
     StarIntro (Adafruit_ST7789 &tftP): tft(tftP), canvas(240, 280) {
+	}
+	
+	uint16_t convertRGBtoRGB565(uint8_t red, uint8_t green, uint8_t blue) {
+		uint16_t r = (red >> 3) & 0x1F;
+		uint16_t g = (green >> 2) & 0x3F;
+		uint16_t b = (blue >> 3) & 0x1F;
+		uint16_t rgb565 = (r << 11) | (g << 5) | b;
+		
+		return rgb565;
+	}
+	
+	void colorCycle(uint8_t &red, uint8_t &green, uint8_t &blue) {
+		if (red == 250 && green < 250 && blue == 0) {
+			green+=25;
+			} else if (green == 250 && red > 0 && blue == 0) {
+			red-=25;
+			} else if (green == 250 && blue < 250 && red == 0) {
+			blue+=25;
+			} else if (blue == 250 && green > 0 && red == 0) {
+			green-=25;
+			} else if (blue == 250 && red < 250 && green == 0) {
+			red+=25;
+			} else if (red == 250 && blue > 0 && green == 0) {
+			blue-=25;
+		}
 	}
 	
 	uint16_t getStringWidth(String str) {
@@ -26,6 +53,7 @@ class StarIntro {
 		int eescoreS = eepromReadInt(2);
 		int eescoreT = eepromReadInt(0);
 		int eescoreTM = eepromReadInt(4);
+		int eescoreP = eepromReadInt(6);
 		
 		for (int i = 0; i < numstars; i++)
 		{
@@ -37,12 +65,31 @@ class StarIntro {
 			stars[i][3] = speed * cos(angle);
 		}
 		
-		while (digitalRead(KEY_CENTER) == HIGH)
+		while (digitalRead(KEY_CENTER) == HIGH && digitalRead(KEY_A) == HIGH && digitalRead(KEY_B) == HIGH)
 		{
 			canvas.fillScreen(ST77XX_BLACK);
-			canvas.setCursor(120 - getStringWidth("PicoPac") / 2, 50);
-			canvas.println("PicoPac");
-			if (millis() % 4500 < 1500)
+			for (int i = 0; i < numstars; i++)
+			{
+				
+				canvas.drawPixel(stars[i][1], stars[i][0],0xBD76);
+				stars[i][0] += stars[i][2] / 1000;
+				stars[i][1] += stars[i][3] / 1000;
+				
+				stars[i][2] *= 1.1;
+				stars[i][3] *= 1.1;
+				
+				if (stars[i][0] < 0 || stars[i][0] > 280 || stars[i][1] < 0 || stars[i][1] > 240)
+				{
+					stars[i][0] = 67;
+					stars[i][1] = 120;
+					float angle = (random(3600) / 1800.0) * PI;
+					float speed = random(450) + 450;
+					stars[i][2] = speed * sin(angle);
+					stars[i][3] = speed * cos(angle);
+				}
+			}
+			
+			if (millis() % 6000 < 1500)
 			{
 				canvas.setCursor(120 - getStringWidth("PICTRIS") / 2, 130);
 				canvas.println("PICTRIS");
@@ -53,25 +100,36 @@ class StarIntro {
 				canvas.setCursor(120 - getStringWidth(cstr) / 2, 160);
 				canvas.println(cstr);
 			}
-			else if (millis() % 4500 < 3000)
+			else if (millis() % 6000 < 3000)
 			{
 				canvas.setCursor(120 - getStringWidth("SCLANGE") / 2, 130);
 				canvas.println("SCLANGE");
 				canvas.setCursor(120 - getStringWidth("HI-SCORE") / 2, 100);
-			    canvas.println("HI-SCORE");
+				canvas.println("HI-SCORE");
 				char cstr[16];
 				itoa(eescoreS, cstr, 10);
 				canvas.setCursor(120 - getStringWidth(cstr) / 2, 160);
 				canvas.println(cstr);
 			}
-			else //if (millis() % 400 < 4500)
+			else if (millis() % 6000 < 4500)
 			{
 				canvas.setCursor(120 - getStringWidth("TABMAN") / 2, 130);
 				canvas.println("TABMAN");
 				canvas.setCursor(120 - getStringWidth("HI-SCORE") / 2, 100);
-			    canvas.println("HI-SCORE");
+				canvas.println("HI-SCORE");
 				char cstr[16];
 				itoa(eescoreTM, cstr, 10);
+				canvas.setCursor(120 - getStringWidth(cstr) / 2, 160);
+				canvas.println(cstr);
+			}
+			else
+			{
+				canvas.setCursor(120 - getStringWidth("POOPIE") / 2, 130);
+				canvas.println("POOPIE");
+				canvas.setCursor(120 - getStringWidth("HI-SCORE") / 2, 100);
+				canvas.println("HI-SCORE");
+				char cstr[16];
+				itoa(eescoreP, cstr, 10);
 				canvas.setCursor(120 - getStringWidth(cstr) / 2, 160);
 				canvas.println(cstr);
 			}
@@ -103,58 +161,62 @@ class StarIntro {
 					canvas.setCursor(120 - getStringWidth("<                    >") / 2, 246);
 					canvas.println("<                    >");
 					canvas.setCursor(120 - getStringWidth("PICTRIS") / 2, 246);
+					canvas.setTextColor(ST77XX_BLUE);
 					canvas.println("PICTRIS");
+					canvas.setTextColor(ST77XX_WHITE);
 				}
 				else if (gameID == 2)
 				{
 					canvas.setCursor(120 - getStringWidth("<                    >") / 2, 246);
 					canvas.println("<                    >");
 					canvas.setCursor(120 - getStringWidth("SCLANGE") / 2, 246);
+					canvas.setTextColor(ST77XX_GREEN);
 					canvas.println("SCLANGE");
+					canvas.setTextColor(ST77XX_WHITE);
+				}
+				else if (gameID == 3)
+				{
+					canvas.setCursor(120 - getStringWidth("<                    >") / 2, 246);
+					canvas.println("<                    >");
+					canvas.setCursor(120 - getStringWidth("TABMAN") / 2, 246);
+					canvas.setTextColor(ST77XX_RED);
+					canvas.println("TABMAN");
+					canvas.setTextColor(ST77XX_WHITE);
 				}
 				else
 				{
 					canvas.setCursor(120 - getStringWidth("<                    >") / 2, 246);
 					canvas.println("<                    >");
-					canvas.setCursor(120 - getStringWidth("TABMAN") / 2, 246);
-					canvas.println("TABMAN");
+					canvas.setCursor(120 - getStringWidth("POOPIE") / 2, 246);
+					canvas.setTextColor(ST77XX_YELLOW);
+					canvas.println("POOPIE");
+					canvas.setTextColor(ST77XX_WHITE);
 				}
 				
 			}    
-			for (int i = 0; i < numstars; i++)
-			{
-				
-				canvas.drawPixel(stars[i][1], stars[i][0],ST77XX_WHITE);
-				stars[i][0] += stars[i][2] / 1000;
-				stars[i][1] += stars[i][3] / 1000;
-				
-				stars[i][2] *= 1.1;
-				stars[i][3] *= 1.1;
-				
-				if (stars[i][0] < 0 || stars[i][0] > 280 || stars[i][1] < 0 || stars[i][1] > 240)
-				{
-					stars[i][0] = 67;
-					stars[i][1] = 120;
-					float angle = (random(3600) / 1800.0) * PI;
-					float speed = random(450) + 450;
-					stars[i][2] = speed * sin(angle);
-					stars[i][3] = speed * cos(angle);
-				}
-			}
+			
+			
+			canvas.setCursor(120 - getStringWidth("PicoPac") / 2, 50);
+			colorCycle(red, green, blue);
+            uint16_t rgb565 = convertRGBtoRGB565(red, green, blue);
+			canvas.setTextColor(rgb565);
+			canvas.println("PicoPac");
+			canvas.setTextColor(ST77XX_WHITE);
+			
 			tft.drawRGBBitmap(0, 0, canvas.getBuffer(), canvas.width(), canvas.height());
 			
 			if (digitalRead(KEY_DOWN) == LOW && millis() > lastSelection + 200)
 			{
 				gameID = gameID - 1;
 				if (gameID == 0)
-				gameID = 3;//2
+				gameID = 4;//2
 				lastSelection = millis();
 				// break;
 			}
 			else if (digitalRead(KEY_UP) == LOW && millis() > lastSelection + 200)
 			{
 				gameID = gameID + 1;
-				if (gameID == 4)//3
+				if (gameID == 5)//3
 				gameID = 1;
 				lastSelection = millis();
 				// break;
@@ -164,10 +226,10 @@ class StarIntro {
 		analogWrite(LEDR, 0);
 		analogWrite(LEDG, 0);
 		analogWrite(LEDY, 0);
-		while (digitalRead(KEY_CENTER) == LOW) {}
+		while (digitalRead(KEY_CENTER) == LOW && digitalRead(KEY_A) == LOW && digitalRead(KEY_B) == LOW) {}
 		delay(90);
 		return gameID;
 	}
 	
 	
-};						
+};							

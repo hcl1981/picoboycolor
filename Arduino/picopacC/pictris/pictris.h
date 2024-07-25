@@ -402,7 +402,7 @@ class Pictris {
 						steerBefore = LOW;
 					}
 					
-					if (!pressedBefore && digitalRead(KEY_LEFT) == LOW && (millis() > (lastROT + leveltime / 4))) // 4
+					if (!pressedBefore && (digitalRead(KEY_LEFT) == LOW || digitalRead(KEY_A) == LOW || digitalRead(KEY_B) == LOW) && (millis() > (lastROT + leveltime / 4))) // 4
 					{
 						rotateTetromino();
 						lastROT = millis();
@@ -450,7 +450,7 @@ class Pictris {
 						tft.drawRGBBitmap(70, 52, canvas.getBuffer(), canvas.width(), canvas.height());
 						
 						delay(1000);
-						while (digitalRead(KEY_CENTER) == HIGH)
+						while (digitalRead(KEY_CENTER) == HIGH && digitalRead(KEY_A) == HIGH && digitalRead(KEY_B) == HIGH)
 						{
 						}
 						writeScore(0);
@@ -519,7 +519,7 @@ class Pictris {
 					unsigned long int last;
 					last = millis();
 					
-					while (digitalRead(KEY_CENTER) == HIGH || millis() < last + 200) {
+					while ((digitalRead(KEY_CENTER) == HIGH && digitalRead(KEY_A) == HIGH && digitalRead(KEY_B) == HIGH)|| millis() < last + 200) {
 					if (millis() % 600 > 300) {
 					}
 					delay(25);

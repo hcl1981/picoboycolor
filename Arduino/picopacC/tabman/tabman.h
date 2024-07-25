@@ -625,7 +625,7 @@ class Tabman {
 		}
 		blOff = false;
 		
-		while (digitalRead(KEY_CENTER) == HIGH || millis() < last + 500) {
+		while ((digitalRead(KEY_CENTER) == HIGH && digitalRead(KEY_A) == HIGH && digitalRead(KEY_B) == HIGH) == HIGH || millis() < last + 500) {
 			canvas.setRotation(1);
 			if (millis() % 600 > 300) {
 				canvas.setTextColor(ST77XX_WHITE);

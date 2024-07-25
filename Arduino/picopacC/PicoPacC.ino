@@ -11,7 +11,7 @@
 #include "tabman/tabman.h"
 #include "sclange/sclange.h"
 #include "pictris/pictris.h"
-
+#include "poopy/poopy.h"
 
 Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);
 
@@ -49,6 +49,9 @@ void setup() {
   pinMode(KEY_UP, INPUT_PULLUP);
   pinMode(KEY_CENTER, INPUT_PULLUP);
 
+  pinMode(KEY_A, INPUT_PULLUP);
+  pinMode(KEY_B, INPUT_PULLUP);
+
   pinMode(SPEAKER, OUTPUT);
   pinMode(LEDR, OUTPUT);
   pinMode(LEDG, OUTPUT);
@@ -70,7 +73,10 @@ void setup() {
   {
     eepromWriteInt(4, 0);
   }
-
+  if (eepromReadInt(6) >= 65500)
+  {
+    eepromWriteInt(6, 0);
+  }
 
   //dtob();
   int gameID;
@@ -92,13 +98,18 @@ void setup() {
   {
     Sclange scl(tft);
     scl.run();
+
   }
   else if (gameID == 3)
   {
     Tabman tab(tft);
     tab.run();
   }
-
+  else if (gameID == 4)
+  {
+    Poopy pp(tft);
+    pp.run();
+  }
 }
 
 void loop() {}

@@ -15,6 +15,9 @@
 #define KEY_CENTER     0
 #define SPEAKER       15
 
+#define KEY_A 27
+#define KEY_B 28
+
 #define UP             1
 #define DOWN           2
 #define LEFT           3

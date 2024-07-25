@@ -1,5 +1,5 @@
 #include <Adafruit_GFX.h>
-#include <Fonts/FreeSansBold12pt7b.h>
+#include <Fonts/FreeSans12pt7b.h>
 
 #include "title.h"
 #include "back.h"
@@ -12,14 +12,14 @@
 
 #define DARKTILE       0xA689
 #define BRIGHTTILE     0xAEAA
-#define SNACOL         0x03fb
+#define SNACOL         0x901A
 #define BORDERCOL      0x9a85
 
 #define XSIZE 15
 #define YSIZE 28
 
 
-class Sclange{
+class Poopy{
 	private:
 	bool bow [8][8] = {
 		{false, false, false, false, false, false, false, false},
@@ -67,19 +67,18 @@ class Sclange{
 	}
 	;
 	
-	uint16_t plum [8][8] = {
-		{0x0000, 0x0000, 0x7800, 0x7800, 0x0000, 0x0000, 0x0000, 0x0000},
-		{0x0000, 0xb01f, 0xb01f, 0x7800, 0x7800, 0xb01f, 0xb01f, 0x0000},
-		{0x0000, 0xb01f, 0xb01f, 0xb01f, 0x7800, 0xb01f, 0xb01f, 0x0000},
-		{0xb01f, 0xb01f, 0xcb7f, 0xb01f, 0xb01f, 0xb01f, 0xb01f, 0xb01f},
-		{0xb01f, 0xb01f, 0xcb7f, 0xcb7f, 0xb01f, 0xb01f, 0xb01f, 0xb01f},
-		{0x0000, 0xb01f, 0xb01f, 0xcb7f, 0xb01f, 0xb01f, 0xb01f, 0x0000},
-		{0x0000, 0xb01f, 0xb01f, 0xb01f, 0xb01f, 0xb01f, 0xb01f, 0x0000},
-		{0x0000, 0x0000, 0x0000, 0xb01f, 0xb01f, 0x0000, 0x0000, 0x0000}
+	uint16_t poop [8][8] = {
+		{0x0000, 0x0000, 0x0000, 0x8410, 0x0000, 0x0000, 0x0000, 0x0000},
+		{0x0000, 0x0000, 0x0000, 0x0000, 0x8410, 0x0000, 0x0000, 0x0000},
+		{0x0000, 0x0000, 0x0000, 0x9260, 0x9260, 0x0000, 0x0000, 0x0000},
+		{0x0000, 0x0000, 0x9383, 0x9383, 0x9260, 0x9260, 0x0000, 0x0000},
+		{0x0000, 0x0000, 0x9260, 0x9260, 0x9383, 0x9383, 0x0000, 0x0000},
+		{0x0000, 0x9383, 0x9383, 0x9260, 0x9260, 0x9260, 0x9260, 0x0000},
+		{0x9260, 0x9260, 0x9260, 0x9383, 0x9383, 0x9260, 0x9260, 0x9260},
+		{0x0000, 0x9260, 0x9260, 0x9260, 0x9260, 0x9383, 0x9383, 0x0000}
 	}
 	;
 	
-	unsigned long int plumtime = 0;
 	int addScore = 0;
 	bool dispoff = true;
 	Adafruit_ST7789 tft;
@@ -91,9 +90,11 @@ class Sclange{
 	
 	int board[XSIZE][YSIZE];
 	int score, level, len, direction, px, py;
+	int poopx = -1;
+	int poopy = -1;
 	
 	public:
-	Sclange (Adafruit_ST7789 &tftP): tft(tftP), canvas(232, 128), canvas2(280, 38), canvas3(280, 38)/*, canvasBack(280, 240)*/{
+	Poopy (Adafruit_ST7789 &tftP): tft(tftP), canvas(232, 128), canvas2(280, 38), canvas3(280, 38)/*, canvasBack(280, 240)*/{
 		
 	}
 	
@@ -191,23 +192,6 @@ class Sclange{
 		}
 	}
 	
-	
-	void putPlum()
-	{
-		if(millis() <= plumtime)return;
-		
-		int rx = random(0, 15);
-		int ry = random(0, 28);
-		
-		while (board[rx][ry] != 0)
-		{
-			rx = random(0, 15);
-			ry = random(0, 28);
-		}
-		board[rx][ry] = -2;
-		plumtime = millis()+2000;
-	}
-	
 	void putApple()
 	{
 		int rx = random(0, 15);
@@ -225,9 +209,11 @@ class Sclange{
 	{
 		score = 0;
 		level = 0;
-		len = 3;
+		len = 6;
 		px = 7;
 		py = 14;
+			 poopx = -1;
+	 poopy = -1;
 		
 		for (int ix = 0; ix < 15; ix++)
 		{
@@ -514,10 +500,7 @@ class Sclange{
 						drawObject(iy * 8 + 4, ix * 8 + 4, apple, 3);
 					}
 					if (board[ix][iy] == -2) {
-						drawObject(iy * 8 + 4, ix * 8 + 4, plum, 3);
-						if(millis() > plumtime){
-							board[ix][iy]=0;
-						}
+						drawObject(iy * 8 + 4, ix * 8 + 4, poop, 3);
 					}
 				}
 			}
@@ -528,21 +511,21 @@ class Sclange{
 	
 	bool crash(int dir)
 	{
-		if (dir == UP && (py == 27 || board[px][py + 1] > 0))
+		if (dir == UP && (py == 27 || board[px][py + 1] > 0 || board[px][py + 1] == -2))
 		{
 			return true;
 		}
-		if (dir == DOWN && (py == 0 || board[px][py - 1] > 0))
-		{
-			return true;
-		}
-		
-		if (dir == LEFT && (px == 0 || board[px - 1][py] > 0))
+		if (dir == DOWN && (py == 0 || board[px][py - 1] > 0|| board[px][py - 1] == -2))
 		{
 			return true;
 		}
 		
-		if (dir == RIGHT && (px == 14 || board[px + 1][py] > 0))
+		if (dir == LEFT && (px == 0 || board[px - 1][py] > 0|| board[px - 1][py] == -2))
+		{
+			return true;
+		}
+		
+		if (dir == RIGHT && (px == 14 || board[px + 1][py] > 0|| board[px + 1][py] == -2))
 		{
 			return true;
 		}
@@ -561,6 +544,9 @@ class Sclange{
 					board[ix][iy] = board[ix][iy] - 1;
 				}
 			}
+		}
+		if(poopx != -1 && board[poopx][poopy]==0){
+			board[poopx][poopy]=-2;
 		}
 	}
 	
@@ -597,10 +583,10 @@ class Sclange{
 			}
 			tft.drawRGBBitmap(24, 65, canvas.getBuffer(), canvas.width(), canvas.height());
 			if(dispoff){
-			dtob();
-			dispoff = false;
-			} else {
-			delay(1000);
+				dtob();
+				dispoff = false;
+				} else {
+				delay(1000);
 			}
 		}
 		
@@ -643,6 +629,8 @@ class Sclange{
 		int lastDir = 0;
 		direction = random(1, 5);
 		putApple();
+		score = 0;
+		//board[10][10] = -2;
 		
 		while (true)
 		{
@@ -667,7 +655,7 @@ class Sclange{
 			}
 			
 			lastDir = direction;
-			if(random(0, 500)==1)putPlum();
+			//if(random(0, 500)==1)putPlum();
 			if (!crash(direction))
 			{
 				if (direction == LEFT)
@@ -681,16 +669,16 @@ class Sclange{
 			}
 			else
 			{
-				if ((len - 3)+addScore > eepromReadInt(2))
+				if (score > eepromReadInt(6))
 				{
-					eepromWriteInt(2, (len - 3)+addScore);
-					writeScoreS("NEW HISCORE: ", (len - 3)+addScore);
+					eepromWriteInt(6, score);
+					writeScoreS("NEW HISCORE: ", score);
 					delay(10);
 					winSound();
 				}
 				else
 				{
-					writeScoreS("FINAL SCORE: ", (len - 3)+addScore);
+					writeScoreS("FINAL SCORE: ", score);
 					delay(10);
 					lostSound();
 				}
@@ -704,31 +692,19 @@ class Sclange{
 			{
 				tick();
 				putApple();
-				len++;
-				writeScoreS("Score: ", (len - 3)+addScore);
-				for (int x = 0; x < 15; x++)
-				{
-					for (int y = 0; y < 28; y++)
-					{
-						if (board[x][y] > 0)board[x][y]++;
-					}
-				}
+				poopx = px;
+				poopy = py;
+				score++;
+				writeScoreS("Score: ", score);
+				//for (int x = 0; x < 15; x++)
+				//{
+				//	for (int y = 0; y < 28; y++)
+				//	{
+				//		if (board[x][y] > 0)board[x][y]++;
+				//	}
+			//}
 			}
 			
-			if (board[px][py] == -2)
-			{
-				tick();
-				len++;
-				addScore+=4;
-				writeScoreS("Score: ", (len - 3)+addScore);
-				for (int x = 0; x < 15; x++)
-				{
-					for (int y = 0; y < 28; y++)
-					{
-						if (board[x][y] > 0)board[x][y]++;
-					}
-				}
-			}
 			
 			board[px][py] = len;
 			
@@ -786,18 +762,32 @@ class Sclange{
 		//tft.drawRGBBitmap(0, 0, canvasBack.getBuffer(), canvasBack.width(), canvasBack.height());
 		//canvasBack.drawRGBBitmap(0, 0, backS, 280, 240);
 		
-		tft.drawRGBBitmap(0, 0, backS, 280, 240);
-		tft.drawRGBBitmap(21, 52, title, 238, 135);
+		tft.drawRGBBitmap(0, 0, backP, 280, 240);
+		//tft.drawRGBBitmap(21, 52, titleP, 238, 135);
 		//tft.drawRGBBitmap(0, 0, canvasBack.getBuffer(), canvasBack.width(), canvasBack.height());
 		//canvasBack.drawRGBBitmap(0, 0, backS, 280, 240);
 		
-		drawCentreString("HISCORE", 140, 108);
+		//drawCentreString("HISCORE", 140, 98);
 		char cstr[16];
-		itoa(eepromReadInt(2), cstr, 10);
-		drawCentreString(cstr, 140, 138);
+		itoa(eepromReadInt(6), cstr, 10);
+		
+		tft.setTextColor(ST77XX_BLACK);
+		
+		drawCentreString(cstr, 143, 110);
+		drawCentreString(cstr, 137, 110);
+		drawCentreString(cstr, 140, 113);
+		drawCentreString(cstr, 140, 107);
+		
+		drawCentreString(cstr, 142, 112);
+		drawCentreString(cstr, 142, 108);
+		drawCentreString(cstr, 138, 112);
+		drawCentreString(cstr, 138, 108);
+		
+		tft.setTextColor(ST77XX_YELLOW);
+		drawCentreString(cstr, 140, 110);
 		
 		canvas2.drawRGBBitmap(0, 0, topS, 280, 51);
-		
+		tft.setTextColor(ST77XX_BLACK);
 		int16_t  x1, y1;
 		uint16_t w, h;
 		
@@ -820,15 +810,15 @@ class Sclange{
 		tft.drawRGBBitmap(0, 0, backS, 280, 240);
 		//tft.drawRGBBitmap(0, 0, canvasBack.getBuffer(), canvasBack.width(), canvasBack.height());
 		writeScoreS("Score: ", 0);
-		while (true)
-		{
-			drawChessboard();
-			initializeS();
-			playS();
-		}
+	while (true)
+	{
+	drawChessboard();
+	initializeS();
+	playS();
+	}
 	}
 	
 	
 	
 	
-};
+	};	
