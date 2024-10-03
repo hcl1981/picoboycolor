@@ -1,5 +1,5 @@
 import vga1_8x8 as font
-import vga1_bold_16x32 as bold_font
+import vga1_bold_16x16 as bold_font
 import random
 import math
 import utime
