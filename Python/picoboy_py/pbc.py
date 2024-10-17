@@ -2,24 +2,22 @@ from micropython import const
 import utime as time
 import random
 from machine import Pin, SPI
-#import st7789
 from st7789 import *
 
 class PBC():
-    LED_RED = Pin(5, Pin.OUT)#7
-    LED_YELLOW = Pin(6, Pin.OUT)#6
-    LED_GREEN = Pin(7, Pin.OUT)#5
+    LED_RED = Pin(5, Pin.OUT)
+    LED_YELLOW = Pin(6, Pin.OUT)
+    LED_GREEN = Pin(7, Pin.OUT)
     
-    JOY_UP = Pin(1, Pin.IN, Pin.PULL_UP)#0
-    JOY_DOWN = Pin(3, Pin.IN, Pin.PULL_UP)#3
-    JOY_LEFT = Pin(4, Pin.IN, Pin.PULL_UP)#4
-    JOY_RIGHT = Pin(2, Pin.IN, Pin.PULL_UP)#2
-    JOY_CENTER = Pin(0, Pin.IN, Pin.PULL_UP)#1
-    #BUTTON_A =
-    #BUTTON_B =
+    JOY_UP = Pin(4, Pin.IN, Pin.PULL_UP)
+    JOY_DOWN = Pin(2, Pin.IN, Pin.PULL_UP)
+    JOY_LEFT = Pin(3, Pin.IN, Pin.PULL_UP)
+    JOY_RIGHT = Pin(1, Pin.IN, Pin.PULL_UP)
+    JOY_CENTER = Pin(0, Pin.IN, Pin.PULL_UP)
+    BUTTON_A = Pin(27, Pin.IN, Pin.PULL_UP)
+    BUTTON_B = Pin(28, Pin.IN, Pin.PULL_UP)
     
-    
-    SPEAKER = Pin(15, Pin.OUT)#15
+    SPEAKER = Pin(15, Pin.OUT)
     
     def __init__(self,baudrate=31250000):
         BACKLIGHT_PIN = 26
