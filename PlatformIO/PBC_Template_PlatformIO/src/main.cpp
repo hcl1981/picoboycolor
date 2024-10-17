@@ -11,7 +11,6 @@
 
 TFT_eSPI tft = TFT_eSPI();
 
-
 void setup() {
  
   pinMode(26, OUTPUT);
