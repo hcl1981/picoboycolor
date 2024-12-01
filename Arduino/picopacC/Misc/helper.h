@@ -23,6 +23,7 @@
 #define LEFT           3
 #define RIGHT          4
 
+/*
 void set_sys_clock_pll(uint32_t vco_freq, uint post_div1, uint post_div2) {
   if (!running_on_fpga()) {
     clock_configure(clk_sys,
@@ -84,7 +85,7 @@ static inline bool set_sys_clock_khz(uint32_t freq_khz, bool required) {
   }
   return false;
 }
-
+*/
 // Matthias Busse 5.2014
 void eepromWriteInt(int adr, int wert)
 {

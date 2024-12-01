@@ -12,7 +12,7 @@
 
 #define DARKTILE       0xA689
 #define BRIGHTTILE     0xAEAA
-#define SNACOL         0x901A
+//#define SNACOL         0x901A
 #define BORDERCOL      0x9a85
 
 #define XSIZE 15
