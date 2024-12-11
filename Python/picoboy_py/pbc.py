@@ -4,6 +4,9 @@ import random
 from machine import Pin, SPI
 from st7789 import *
 import framebuf
+import os
+import math
+
 
 class PBC():
     LED_RED = Pin(5, Pin.OUT)
@@ -23,6 +26,9 @@ class PBC():
     BUFFER_WIDTH = 240
     BUFFER_HEIGHT = 280
     
+    FOREGROUND = color565(31,31,63)
+    BACKGROUND = color565(0,0,0) 
+    MARKER = color565(0,31,0) 
 
     def __init__(self,baudrate=31250000):
         BACKLIGHT_PIN = 26
@@ -80,18 +86,9 @@ class PBC():
         
     def setPeriodicBoundary(self, x, y):
         
-        if x < 0:
-            x = self.BUFFER_WIDTH + x
-            
-        if x >= self.BUFFER_WIDTH:
-            x = x - self.BUFFER_WIDTH
-            
-        if y < 0:
-            y = self.BUFFER_HEIGHT + y
-            
-        if y >= self.BUFFER_HEIGHT:
-            y  = y - self.BUFFER_HEIGHT
-        
+        x = x % self.BUFFER_WIDTH
+        y = y % self.BUFFER_HEIGHT
+
         return x, y
     
     def setHardBoundary(self, x, y, radius=0):
@@ -111,6 +108,50 @@ class PBC():
         return x, y
     
     def draw(self):
-        self.tft.blit_buffer(self.canvas, 0, 0, self.BUFFER_WIDTH, self.BUFFER_HEIGHT)    
+        self.tft.blit_buffer(self.canvas, 0, 0, self.BUFFER_WIDTH, self.BUFFER_HEIGHT)
         
+        
+    def menu(self):
+        self.programList = [".".join(program.split('.')[:-1]) for program in os.listdir("/") if program.endswith('.py')]
+
+        self.selectorProgram = 0
+        selectorVisible = 0
+        self.paginate = 0
+        maxVisible = 10
+        
+        self.drawPrograms(0, maxVisible)
+
+        while True:
+            if self.pressedUp():
+                self.selectorProgram = (self.selectorProgram - 1) % len(self.programList)
+                selectorVisible = self.selectorProgram % maxVisible
+                self.paginate = self.selectorProgram // maxVisible            
+        
+            if self.pressedDown():
+                self.selectorProgram = (self.selectorProgram + 1) % len(self.programList)
+                selectorVisible = self.selectorProgram % maxVisible
+                self.paginate = self.selectorProgram // maxVisible
+        
+            self.drawPrograms(self.paginate, maxVisible)     
+                
+            if self.pressedA() or self.pressedB():
+                self.canvas.fill(self.BACKGROUND)
+                self.canvas = None 
+                
+                exec_context = {} # this is necessary so that globals and locals use the same context
+                exec(open(self.programList[self.selectorProgram] + '.py').read(), exec_context, exec_context)
+        
+            self.draw()
+            self.delay(100)
+                
+                
+    def drawPrograms(self, paginate, maxPrograms):
+    
+        self.canvas.fill(self.BACKGROUND)
+        self.canvas.text("Programm/Spiel auswaehlen", 20, 20, self.FOREGROUND)
+        self.canvas.text("Seite " + str(paginate+1) + '/' + str(math.ceil(len(self.programList)/maxPrograms)), 20, 40 + 12*(maxPrograms+1), self.FOREGROUND)
+        for n, program in enumerate(self.programList[paginate*maxPrograms : (paginate*maxPrograms + maxPrograms)]):    
+            self.canvas.text(program, 20 + 20, 20 + 10 + (n+1)*12, self.FOREGROUND)
+
+        self.canvas.ellipse(30, 25 + 6 + (self.selectorProgram + 1)*12, 5, 5, self.MARKER, 1)
 
