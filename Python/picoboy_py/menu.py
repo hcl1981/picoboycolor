@@ -1,4 +1,4 @@
 import pbc
 
 pb = pbc.PBC()
-pb.menu()
+pb.menu('menu')

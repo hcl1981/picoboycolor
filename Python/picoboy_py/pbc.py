@@ -108,11 +108,20 @@ class PBC():
         return x, y
     
     def draw(self):
-        self.tft.blit_buffer(self.canvas, 0, 0, self.BUFFER_WIDTH, self.BUFFER_HEIGHT)
+        if self.canvas: 
+            self.tft.blit_buffer(self.canvas, 0, 0, self.BUFFER_WIDTH, self.BUFFER_HEIGHT)
+        else:
+            # if canvas not set (e.g. when some file was executed via the menu), we have to create it again
+            self.__init__()
+            self.tft.blit_buffer(self.canvas, 0, 0, self.BUFFER_WIDTH, self.BUFFER_HEIGHT)
+
         
-        
-    def menu(self):
+    def menu(self, menuFile=""):
         self.programList = [".".join(program.split('.')[:-1]) for program in os.listdir("/") if program.endswith('.py')]
+        
+        # remove pbc class from menu and the menuFile if given by the menu() call
+        self.programList = [program for program in self.programList if not (program == 'pbc') | (program == menuFile)]
+    
 
         self.selectorProgram = 0
         selectorVisible = 0
@@ -137,9 +146,12 @@ class PBC():
             if self.pressedA() or self.pressedB():
                 self.canvas.fill(self.BACKGROUND)
                 self.canvas = None 
-                
+                                
                 exec_context = {} # this is necessary so that globals and locals use the same context
-                exec(open(self.programList[self.selectorProgram] + '.py').read(), exec_context, exec_context)
+                exec(open(self.programList[self.selectorProgram] + '.py').read() + \
+                     #"\nelse:\n\tpb.canvas=None", # this deletes the canvas when the while-loop condition is set to False
+                     "\npb.canvas=None", # this deletes the canvas at the end of the script
+                     exec_context, exec_context)
         
             self.draw()
             self.delay(100)
@@ -148,10 +160,11 @@ class PBC():
     def drawPrograms(self, paginate, maxPrograms):
     
         self.canvas.fill(self.BACKGROUND)
-        self.canvas.text("Programm/Spiel auswaehlen", 20, 20, self.FOREGROUND)
-        self.canvas.text("Seite " + str(paginate+1) + '/' + str(math.ceil(len(self.programList)/maxPrograms)), 20, 40 + 12*(maxPrograms+1), self.FOREGROUND)
+        self.canvas.text("Programm/Spiel auswaehlen", 20, 60, self.FOREGROUND)
+        self.canvas.text("Seite " + str(paginate+1) + '/' + str(math.ceil(len(self.programList)/maxPrograms)), 20, 80 + 12*(maxPrograms+1), self.FOREGROUND)
         for n, program in enumerate(self.programList[paginate*maxPrograms : (paginate*maxPrograms + maxPrograms)]):    
-            self.canvas.text(program, 20 + 20, 20 + 10 + (n+1)*12, self.FOREGROUND)
+            self.canvas.text(program, 20 + 20, 60 + 10 + (n+1)*12, self.FOREGROUND)
 
-        self.canvas.ellipse(30, 25 + 6 + (self.selectorProgram + 1)*12, 5, 5, self.MARKER, 1)
+        self.canvas.ellipse(30, 65 + 6 + (self.selectorProgram % maxPrograms + 1)*12, 5, 5, self.MARKER, 1)
+
 
