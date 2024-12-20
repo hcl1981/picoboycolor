@@ -149,8 +149,7 @@ class PBC():
                                 
                 exec_context = {} # this is necessary so that globals and locals use the same context
                 exec(open(self.programList[self.selectorProgram] + '.py').read() + \
-                     #"\nelse:\n\tpb.canvas=None", # this deletes the canvas when the while-loop condition is set to False
-                     "\npb.canvas=None", # this deletes the canvas at the end of the script
+                     "\npb.delay(2000)\npb.canvas=None", # this deletes the canvas at the end of the script
                      exec_context, exec_context)
         
             self.draw()
