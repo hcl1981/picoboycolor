@@ -633,6 +633,7 @@ void playS() {
   uint32_t lastTime = 0;
   int lastDir = 0;
   direction = random(1, 5);
+  addScore = 0;
   putApple();
 
   while (true)
