@@ -42,7 +42,7 @@ void setup() {
 void loop() {
 
   // Send message via serial
-  Serial.println("Hello from Picoboy color. (" + String(millis()) + ")");
+  Serial.println("Hello from Picoboy Color. (" + String(millis()) + ")");
 
   // Deativate sending led
   digitalWrite(LED_YELLOW, LOW);
