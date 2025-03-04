@@ -9,9 +9,9 @@ import math
 
 
 class PBC():
-    LED_RED = Pin(5, Pin.OUT)
-    LED_YELLOW = Pin(6, Pin.OUT)
-    LED_GREEN = Pin(7, Pin.OUT)
+    LED_RED = Pin(14, Pin.OUT)
+    LED_YELLOW = Pin(13, Pin.OUT)
+    LED_GREEN = Pin(12, Pin.OUT)
     
     JOY_UP = Pin(4, Pin.IN, Pin.PULL_UP)
     JOY_DOWN = Pin(2, Pin.IN, Pin.PULL_UP)
