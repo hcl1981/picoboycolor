@@ -155,7 +155,6 @@ class PBC():
             self.draw()
             self.delay(100)
                 
-                
     def drawPrograms(self, paginate, maxPrograms):
     
         self.canvas.fill(self.BACKGROUND)
@@ -165,5 +164,11 @@ class PBC():
             self.canvas.text(program, 20 + 20, 60 + 10 + (n+1)*12, self.FOREGROUND)
 
         self.canvas.ellipse(30, 65 + 6 + (self.selectorProgram % maxPrograms + 1)*12, 5, 5, self.MARKER, 1)
-
+        
+    def rgb2bgr565(self, buf):
+        out = bytearray(len(buf))
+        for i in range(0, len(buf), 2):
+            out[i]   = buf[i+1]
+            out[i+1] = buf[i]
+        return out
 
