@@ -228,6 +228,7 @@ class Sclange{
 		len = 3;
 		px = 7;
 		py = 14;
+		addScore = 0;
 		
 		for (int ix = 0; ix < 15; ix++)
 		{
