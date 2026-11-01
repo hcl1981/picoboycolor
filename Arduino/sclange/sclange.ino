@@ -108,27 +108,18 @@ GFXcanvas16 canvas3(280, 38);
 int board[XSIZE][YSIZE];
 int score, level, len, direction, px, py;
 
-// Matthias Busse 5.2014
+// Legt einen 16-Bit-Wert in zwei Bytes ab, das niedrige zuerst
 void eepromWriteInt(int adr, int wert)
 {
-  byte low, high;
-  low = wert & 0xFF;
-  high = (wert >> 8) & 0xFF;
-  EEPROM.write(adr, low);
-  EEPROM.write(adr + 1, high);
+  for (int i = 0; i < 2; i++)
+    EEPROM.write(adr + i, (wert >> (8 * i)) & 0xFF);
   EEPROM.commit();
-  return;
 }
 
-// Matthias Busse 5.2014
+// Gegenstueck zu eepromWriteInt
 int eepromReadInt(int adr)
 {
-  byte low, high;
-  low = EEPROM.read(adr);
-  high = EEPROM.read(adr + 1);
-  return low + ((high << 8) & 0xFF00);
-
-  return 0;
+  return EEPROM.read(adr) | (EEPROM.read(adr + 1) << 8);
 }
 
 void drawCentreString(const char *buf, int x, int y)

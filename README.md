@@ -17,3 +17,6 @@ Wie bereits der PicoBoy ist die neue Version in Python und über die Arduino IDE
 * Spannungsversorgung über USB-C oder 2 AAA-Batterien
 
 Weitere Informationen: [picoboy.de](https://www.picoboy.de/der-picoboy-color/)
+
+# Lizenz
+MIT, siehe [LICENSE.txt](LICENSE.txt). Mitgelieferte Fremdteile behalten ihre Lizenz: TFT_eSPI (`PlatformIO/*/lib/TFT_eSPI`, siehe die `license.txt` dort), MicroPython (MIT) und die Beispiele mit eigenem Vermerk im Dateikopf.
